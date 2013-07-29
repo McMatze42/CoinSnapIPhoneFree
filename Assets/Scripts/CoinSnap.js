@@ -17,7 +17,6 @@ private var oldCoinPos:Vector3 = coinPos;
 private var coinActive:boolean = false;
 private var camPos: Vector3 = Vector3(0, 1.5, -3.5); 
 private var startEuros: int = 10;
-private var countHumanPlayer: int = 0;
 private var countCompPlayer: int = 0;
 private var countPlayer: int;
 private var actualPlayer: int = -1;
@@ -55,9 +54,9 @@ private var MoneyLabel:UILabel;
 private var LevelLabel:UILabel;
 
 private var namePlayer1: String = "Type here";
-private var namePlayer2: String = "Type here";
-private var namePlayer3: String = "Type here";
-private var namePlayer4: String = "Type here";
+private var namePlayer2: String = "Comp #1";
+private var namePlayer3: String = "Comp #2";
+private var namePlayer4: String = "Comp #3";
 
 var UICredits: GameObject; // UICredits prefab to anstantiate
 var coinRoundEnd: GameObject; // coinRoundEnd prefab to instantiate
@@ -184,16 +183,8 @@ function setStateNewGame()
 	if (!arState[STATE_INIT_NEWGAME])
 	{ 
 		var cb:UICheckbox;
-		countHumanPlayer = 1;
 		countCompPlayer = 0;
-		// count human and computer player 
-		cb = GameObject.Find("Checkbox_H2").GetComponent(UICheckbox);
-		if (cb.isChecked) countHumanPlayer++;
-		cb = GameObject.Find("Checkbox_H3").GetComponent(UICheckbox);
-		if (cb.isChecked) countHumanPlayer++;
-		cb = GameObject.Find("Checkbox_H4").GetComponent(UICheckbox);
-		if (cb.isChecked) countHumanPlayer++;
-		
+		// count computer player 	
 		cb = GameObject.Find("Checkbox_C2").GetComponent(UICheckbox);
 		if (cb.isChecked) countCompPlayer++;
 		cb = GameObject.Find("Checkbox_C3").GetComponent(UICheckbox);
@@ -201,7 +192,7 @@ function setStateNewGame()
 		cb = GameObject.Find("Checkbox_C4").GetComponent(UICheckbox);
 		if (cb.isChecked) countCompPlayer++;
 		
-		countPlayer = countHumanPlayer + countCompPlayer;
+		countPlayer = countCompPlayer + 1; // 1 human
 		Destroy(mainMenuClone);
 		arState[STATE_INIT_NEWGAME] = true;
 	}
@@ -336,7 +327,7 @@ function StateNextPlayer(state:int)
 			setHUDInfos();
 			CreateCoin();
 			
-			if (actualPlayer < countHumanPlayer)
+			if (actualPlayer < 1) // must be human
 			{
 				SnapCoin.GetComponent(CoinForce).setHumanTrue();
 			}
@@ -459,12 +450,9 @@ function StateScore(state:int)
 					}
 				}
 				
-				if (countHumanPlayer == 1)
+				if (Winner == 1)
 				{
-					if (Winner == 1)
-					{
-						roundsWon++;
-					}
+					roundsWon++;
 				}
 			}
 			if (Time.time > nextGoOnTime)
@@ -544,123 +532,6 @@ function setNewLocalizationGer(setIt: boolean)
 	}
 }
 
-function human2checked(setIt:boolean)
-{
-	if (setIt) 
-	{
-		var ib:UIInput = GameObject.Find("Input_Name_2").GetComponent(UIInput);
-		if (isFree == false)
-		{
-			ib.text = loca.getLoc("hiertippen");
-			ib.enabled = true;
-		}
-		else
-		{
-			ib.text = "Comp #1";
-			ib.enabled = false;
-			var cb:UICheckbox = GameObject.Find("Checkbox_H2").GetComponent(UICheckbox);
-			cb.isChecked = false;
-			cb = GameObject.Find("Checkbox_C2").GetComponent(UICheckbox);
-			cb.isChecked = true;
-		}
-	}
-}
-
-function comp2checked(setIt:boolean)
-{
-	if (setIt) 
-	{
-		var ib:UIInput = GameObject.Find("Input_Name_2").GetComponent(UIInput);
-		ib.enabled = false;
-		var tempLabel:UILabel = GameObject.Find("Input_Name_2").GetComponentInChildren(UILabel);
-		tempLabel.text = "Comp #1";
-	}
-}
-
-function human3checked(setIt:boolean)
-{
-	var ib:UIInput = GameObject.Find("Input_Name_3").GetComponent(UIInput);
-	if (setIt) 
-	{
-		if (isFree == false)
-		{
-			ib.text = loca.getLoc("hiertippen");
-			ib.enabled = true;
-		}
-		else
-		{
-			ib.text = "Comp #2";
-			ib.enabled = false;
-			var cb:UICheckbox = GameObject.Find("Checkbox_H3").GetComponent(UICheckbox);
-			cb.isChecked = false;
-			cb = GameObject.Find("Checkbox_C3").GetComponent(UICheckbox);
-			cb.isChecked = true;
-		}
-	}
-	else
-	{
-		// could be none / not human and not comp
-		ib.enabled = false;
-		var tempLabel:UILabel = GameObject.Find("Input_Name_3").GetComponentInChildren(UILabel);
-		tempLabel.text = "";
-	}
-}
-
-function comp3checked(setIt:boolean)
-{
-	if (setIt) 
-	{
-		var ib:UIInput = GameObject.Find("Input_Name_3").GetComponent(UIInput);
-		ib.enabled = false;
-		var tempLabel:UILabel = GameObject.Find("Input_Name_3").GetComponentInChildren(UILabel);
-		tempLabel.text = "Comp #2";
-	}
-}
-
-function human4checked(setIt:boolean)
-{
-	var ib:UIInput = GameObject.Find("Input_Name_4").GetComponent(UIInput);
-	if (setIt) 
-	{
-		if (isFree == false)
-		{
-			ib.text = loca.getLoc("hiertippen");
-			ib.enabled = true;
-		}
-		else
-		{
-			ib.text = "Comp #3";
-			ib.enabled = false;
-			var cb:UICheckbox = GameObject.Find("Checkbox_H4").GetComponent(UICheckbox);
-			cb.isChecked = false;
-		}
-	}
-	else
-	{
-		// could be none / not human and not comp
-		ib.enabled = false;
-		var tempLabel:UILabel = GameObject.Find("Input_Name_4").GetComponentInChildren(UILabel);
-		tempLabel.text = "";
-	}
-}
-
-function comp4checked(setIt:boolean)
-{
-	GameObject.Find("Input_Name_4").GetComponent(UIInput).enabled = false;
-	var tempLabel:UILabel = GameObject.Find("Input_Name_4").GetComponentInChildren(UILabel);
-	if (setIt) 
-	{
-		var ib:UIInput = GameObject.Find("Input_Name_4").GetComponent(UIInput);
-		ib.enabled = false;
-		tempLabel.text = "Comp #3";
-	}
-	else
-	{
-		// could be none / not human and not comp
-		tempLabel.text = "";
-	}
-}
-
 function OnSubmit ()
 {
 	//var tempLabel:UILabel = GameObject.Find("Input_Name_1").GetComponentInChildren(UILabel);
@@ -677,34 +548,6 @@ function OnSubmit ()
 			}	
 		}
 	}
-	
-	
-	ib = GameObject.Find("Input_Name_2").GetComponent(UIInput);
-	text = ib.text;
-	if (text == "")
-	{
-		var tempLabel: UILabel = GameObject.Find("Input_Name_2").GetComponentInChildren(UILabel);
-		text = tempLabel.text;
-	}
-	namePlayer2 = text;
-	
-	ib = GameObject.Find("Input_Name_3").GetComponent(UIInput);
-	text = ib.text;
-	if (text == "")
-	{
-		tempLabel = GameObject.Find("Input_Name_3").GetComponentInChildren(UILabel);
-		text = tempLabel.text;
-	}
-	namePlayer3 = text;
-	
-	ib = GameObject.Find("Input_Name_4").GetComponent(UIInput);
-	text = ib.text;
-	if (text == "")
-	{
-		tempLabel = GameObject.Find("Input_Name_4").GetComponentInChildren(UILabel);
-		text = tempLabel.text;
-	}
-	namePlayer4 = text;
 }
 
 // misc functions
@@ -741,14 +584,7 @@ function CreateMainMenu()
 	cb.eventReceiver = go;
 	cb = GameObject.Find("Checkbox_L2").GetComponent(UICheckbox);
 	cb.eventReceiver = go;
-	
-	cb = GameObject.Find("Checkbox_H2").GetComponent(UICheckbox);
-	cb.eventReceiver = go;
-	cb = GameObject.Find("Checkbox_H3").GetComponent(UICheckbox);
-	cb.eventReceiver = go;
-	cb = GameObject.Find("Checkbox_H4").GetComponent(UICheckbox);
-	cb.eventReceiver = go;
-	
+
 	cb = GameObject.Find("Checkbox_C2").GetComponent(UICheckbox);
 	cb.eventReceiver = go;
 	cb = GameObject.Find("Checkbox_C3").GetComponent(UICheckbox);
@@ -758,15 +594,6 @@ function CreateMainMenu()
 		
 	ib = GameObject.Find("Input_Name_1").GetComponent(UIInput);
 	ib.eventReceiver = go;
-	ib = GameObject.Find("Input_Name_2").GetComponent(UIInput);
-	ib.eventReceiver = go;
-	ib.enabled = false;
-	ib = GameObject.Find("Input_Name_3").GetComponent(UIInput);
-	ib.eventReceiver = go;
-	ib.enabled = false;
-	ib = GameObject.Find("Input_Name_4").GetComponent(UIInput);
-	ib.eventReceiver = go;
-	ib.enabled = false;
 	
 	buttonPlay = GameObject.Find("Button_Play").GetComponent(UIButton);
 	buttonPlay.isEnabled = false;
@@ -801,14 +628,7 @@ function setHUDInfos()
 	MoneyLabel.text = "[2EFE2E]" + arPlayerMoney[actualPlayer].ToString() + "[-]";
 	
 	LevelLabel = GameObject.Find("Label_Level").GetComponent(UILabel);
-	if (countHumanPlayer == 1)
-	{
-		LevelLabel.text = "[2EFE2E]" + gameLevel.ToString() + "[-]";
-	}
-	else
-	{
-		LevelLabel.text = "[2EFE2E] - [-]";
-	}
+	LevelLabel.text = "[2EFE2E]" + gameLevel.ToString() + "[-]";
 }
 
 function CreateRoundEndScreen()
@@ -862,9 +682,8 @@ function setRoundEndInfos()
 			strScore += Credits.ToString();
 			strScore += " " + loca.getLoc("geld") + "\n";
 						
-			if ((countHumanPlayer == 1) && (BestPlayer == 1))
+			if (BestPlayer == 1)
 			{
-				// only if 1 human
 				coinsWon = Credits - startEuros;
 				
 				if ((place == 1) && (Best < 1))
@@ -883,54 +702,52 @@ function setRoundEndInfos()
 		}
 	}
 	
-	if (countHumanPlayer == 1)
+	strScore += "\n";
+	switch (roundsWon)
 	{
-		strScore += "\n";
-		switch (roundsWon)
-		{
-			case 0:
-			case 1:
-			case 2:
-			case 3:
-				strScore += loca.getLoc("daswarnichts");
-			break;	
-			case 4:
-				strScore += "";
-			break;
-			case 5:
-				strScore += loca.getLoc("eswirdbesser");
-			break;	
-			case 6:
-			case 7:
-				strScore += loca.getLoc("sogehts");
-			break;
-			case 8:
-				strScore += loca.getLoc("grossartig");
-			break;
-			case 9:
-				strScore += loca.getLoc("wunderbar");
-			break;
-			case 10:
-				strScore += loca.getLoc("koenig");
-			break;
-			default:
-			break;
-		}
-		strScore += "\n";
-		
-		if (coinsWon > 0)
-		{
-			strScore += loca.getLoc("duhastgewonnen") + " " + coinsWon.ToString() + " " + loca.getLoc("geld");
-			if (lang == 2) strScore += " " + loca.getLoc("gewonnen");
-			strScore += "!";	
-		}
-		else
-		{
-			strScore += loca.getLoc("duhastverloren")+" "+Mathf.Abs(coinsWon).ToString()+" "+ loca.getLoc("geld");
-			if (lang == 2) strScore += " " + loca.getLoc("verloren");
-			strScore += "!";
-		}	
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+			strScore += loca.getLoc("daswarnichts");
+		break;	
+		case 4:
+			strScore += "";
+		break;
+		case 5:
+			strScore += loca.getLoc("eswirdbesser");
+		break;	
+		case 6:
+		case 7:
+			strScore += loca.getLoc("sogehts");
+		break;
+		case 8:
+			strScore += loca.getLoc("grossartig");
+		break;
+		case 9:
+			strScore += loca.getLoc("wunderbar");
+		break;
+		case 10:
+			strScore += loca.getLoc("koenig");
+		break;
+		default:
+		break;
 	}
+	strScore += "\n";
+	
+	if (coinsWon > 0)
+	{
+		strScore += loca.getLoc("duhastgewonnen") + " " + coinsWon.ToString() + " " + loca.getLoc("geld");
+		if (lang == 2) strScore += " " + loca.getLoc("gewonnen");
+		strScore += "!";	
+	}
+	else
+	{
+		strScore += loca.getLoc("duhastverloren")+" "+Mathf.Abs(coinsWon).ToString()+" "+ loca.getLoc("geld");
+		if (lang == 2) strScore += " " + loca.getLoc("verloren");
+		strScore += "!";
+	}	
+	
 	scoreLabel.text = strScore;
 	
 	var tempLabel: UILabel = GameObject.Find("Button_NewGame").GetComponentInChildren(UILabel);
@@ -938,28 +755,21 @@ function setRoundEndInfos()
 	tempLabel = GameObject.Find("Button_GoOn").GetComponentInChildren(UILabel);
 	tempLabel.text = loca.getLoc("goon");
 	
-	if (countHumanPlayer == 1)
+	if (gameLevel <= maxGameLevel)
 	{
-		if (gameLevel <= maxGameLevel)
+		if (nextLevel)
 		{
-			if (nextLevel)
-			{
-				nextLevelLabel.text = loca.getLoc("nextlevel");
-			}
-			else
-			{
-				nextLevelLabel.text = "";
-			}
+			nextLevelLabel.text = loca.getLoc("nextlevel");
 		}
 		else
 		{
-			nextLevelLabel.text = loca.getLoc("maxlevel");
-			btGoOn.isEnabled = false;
+			nextLevelLabel.text = "";
 		}
 	}
 	else
 	{
-		nextLevelLabel.text = "";	
+		nextLevelLabel.text = loca.getLoc("maxlevel");
+		btGoOn.isEnabled = false;
 	}
 }
 
@@ -970,82 +780,14 @@ function localizeMainMenu()
 	
 	var tempLabel: UILabel = GameObject.Find("Label_Player").GetComponent(UILabel);
 	tempLabel.text = loca.getLoc("spieler");
-	tempLabel = GameObject.Find("Checkbox_H1").GetComponentInChildren(UILabel);
-	tempLabel.text = loca.getLoc("human");
-	tempLabel = GameObject.Find("Checkbox_H2").GetComponentInChildren(UILabel);
-	tempLabel.text = loca.getLoc("human") + "*";;
-	tempLabel = GameObject.Find("Checkbox_H3").GetComponentInChildren(UILabel);
-	tempLabel.text = loca.getLoc("human") + "*";;
-	tempLabel = GameObject.Find("Checkbox_H4").GetComponentInChildren(UILabel);
-	tempLabel.text = loca.getLoc("human") + "*";;
 	tempLabel = GameObject.Find("Label_Name").GetComponent(UILabel);
 	tempLabel.text = loca.getLoc("deinname");
 	tempLabel = GameObject.Find("Input_Name_1").GetComponentInChildren(UILabel);
-	tempLabel.text = loca.getLoc("hiertippen");
-	if (isFree == false)
-	{
-		var ib:UIInput = GameObject.Find("Input_Name_2").GetComponent(UIInput);
-		if (ib.enabled == true)
-		{
-			ib.text = loca.getLoc("hiertippen");
-		}
-		else
-		{
-			ib.text = "Comp #1";
-		}
-		
-		ib = GameObject.Find("Input_Name_3").GetComponent(UIInput);
-		if (ib.enabled == true)
-		{
-			ib.text = loca.getLoc("hiertippen");
-		}
-		else
-		{
-			tempLabel = GameObject.Find("Input_Name_3").GetComponentInChildren(UILabel);
-			cb = GameObject.Find("Checkbox_C3").GetComponent(UICheckbox);
-			if (cb.isChecked == true)
-			{
-				ib.text = "Comp #2";
-			}
-			else
-			{
-				tempLabel.text = "";
-			}	
-		}
-		
-		ib = GameObject.Find("Input_Name_4").GetComponent(UIInput);
-		if (ib.enabled == true)
-		{
-			ib.text = loca.getLoc("hiertippen");
-		}
-		else
-		{
-			tempLabel = GameObject.Find("Input_Name_4").GetComponentInChildren(UILabel);
-			cb = GameObject.Find("Checkbox_C4").GetComponent(UICheckbox);
-			if (cb.isChecked == true)
-			{
-				ib.text = "Comp #3";
-			}
-			else
-			{
-				tempLabel.text = "";
-			}	
-		}
-	}
-	else
-	{
-		tempLabel = GameObject.Find("Input_Name_2").GetComponentInChildren(UILabel);
-		tempLabel.text = "Comp #1";
-		tempLabel = GameObject.Find("Input_Name_3").GetComponentInChildren(UILabel);
-		tempLabel.text = "Comp #2";
-		tempLabel = GameObject.Find("Input_Name_4").GetComponentInChildren(UILabel);
-		tempLabel.text = "";
-	}
+	tempLabel.text = loca.getLoc("hiertippen");	
 	tempLabel = GameObject.Find("Button_Play").GetComponentInChildren(UILabel);
 	tempLabel.text = loca.getLoc("spielen");
 	tempLabel = GameObject.Find("Button_Credits").GetComponentInChildren(UILabel);
 	tempLabel.text = loca.getLoc("abspann");
-	
 	tempLabel = GameObject.Find("Label_Copyright").GetComponent(UILabel);
 	tempLabel.text = loca.getLoc("bezahl");
 }
@@ -1071,8 +813,9 @@ function coinIsReady()
 function setStateCoinIsActive()
 {
 	coinActive = true;
-	if (actualPlayer < countHumanPlayer)
+	if (actualPlayer < 1)
 	{
+		// only human player
 		Camera.main.GetComponent(SmoothFollow).target = SnapCoin.transform;
 	}
 	else

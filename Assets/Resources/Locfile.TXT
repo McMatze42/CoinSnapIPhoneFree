@@ -1,5 +1,5 @@
 ++MainMenu
-spieler|Players|Spieler
+spieler|Oponents|Gegner
 human|Human|Mensch
 computer|Computer|Computer
 deinname|Your Name|Dein Name
@@ -7,7 +7,7 @@ hiertippen|type here|Hier Tippen
 gesperrt|locked|gesperrt
 spielen|Play|Spielen
 abspann|Credits|Abspann
-bezahl|*) Only paid version.|*) Nur in der Bezahlversion
+bezahl|(c) 2013 Matthias Suess|(c) 2013 Matthias Suess
 ++CoinHUD
 spielername|Player|Spieler
 geld|Coins|Münzen
